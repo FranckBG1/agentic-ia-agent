@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assistant Psychologique</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/slots.css" />
+    <link rel="stylesheet" href="/static/css/recommendations.css" />
+    <!-- Ajout des fonts pour les recommendations -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    />
+  </head>
+  <body>
+    <h1>🧠 Assistant Psychologique</h1>
+
+    <!-- Conteneur pour les messages d'urgence (fixe en haut) -->
+    <div id="emergency-banner" class="emergency-banner" style="display: none">
+      <!-- Le message d'urgence sera inséré ici -->
+    </div>
+
+    <div class="session-header">
+      <div class="session-info">
+        Session: <span id="session-id">Chargement...</span>
+      </div>
+      <button id="reset-button">🔄 Nouvelle conversation</button>
+    </div>
+
+    <div id="chat-window"></div>
+
+    <div id="input-container">
+      <input
+        type="text"
+        id="text-input"
+        placeholder="Tapez votre message ou utilisez le micro..."
+        autocomplete="off"
+      />
+      <button id="send-button">Envoyer</button>
+      <button id="mic-button">🎤 Parler</button>
+    </div>
+    <!-- Section de réservation -->
+    <div id="booking-container" class="booking-container" style="display: none">
+      <div class="booking-header">
+        <h3>📅 Réservation de rendez-vous</h3>
+        <button class="booking-close" onclick="bookingManager.hide()">×</button>
+      </div>
+      <div id="booking-slots" class="booking-slots">
+        <!-- Les créneaux seront insérés ici -->
+      </div>
+    </div>
+
+    <!-- Section des recommandations interactives -->
+    <div
+      id="recommendations-container"
+      class="recommendations-section"
+      style="display: none"
+    >
+      <div class="recommendations-header">
+        <h3>🎯 Vos recommandations personnalisées</h3>
+        <button
+          class="recommendations-close"
+          onclick="recommendationsManager.hide()"
+        >
+          ×
+        </button>
+      </div>
+      <div class="recommendations-grid">
+        {% if recommendations %} {% for recommendation in recommendations %} {%
+        if recommendation is mapping %} {% if recommendation.get('type') ==
+        "respiration" %}
+        <div
+          class="recommendation-card breathing"
+          data-breathing-steps='{{ recommendation.get("breathingSteps")|tojson|safe }}'
+        >
+          <h3>{{ recommendation.get('titre', '') }}</h3>
+          <p>{{ recommendation.get('message', '') }}</p>
+          <div class="breathing-container">
+            <div class="breathing-box"></div>
+            <p class="breath-instruction">
+              Cliquez sur Démarrer pour commencer
+            </p>
+            <div class="controls">
+              <button class="start-btn">▶️ Démarrer</button>
+              <button class="stop-btn">⏹️ Stop</button>
+            </div>
+          </div>
+        </div>
+        {% elif recommendation.get('type') == "yoga" %}
+        <div class="recommendation-card yoga">
+          <h3>{{ recommendation.get('titre', '') }}</h3>
+          <p>{{ recommendation.get('message', '') }}</p>
+          <div class="yoga-container">
+            <div class="yoga-video">
+              <div class="video-container">
+                <iframe
+                  width="100%"
+                  height="315"
+                  src="{{ recommendation.get('video_url', '') }}"
+                  frameborder="0"
+                  allowfullscreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                >
+                </iframe>
+              </div>
+            </div>
+            <div class="meditation-timer">
+              <div class="timer-circle">
+                <span class="time-display">03:00</span>
+              </div>
+              <div class="controls">
+                <button class="start-yoga-btn">▶️ Commencer</button>
+                <button class="stop-yoga-btn">⏹️ Arrêter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% elif recommendation.get('type') in ["relaxation", "sommeil",
+        "energie", "focus", "motivation"] %}
+        <div class="recommendation-card media">
+          <h3>{{ recommendation.get('titre', '') }}</h3>
+          <p>{{ recommendation.get('message', '') }}</p>
+          {% if recommendation.get('lien') %}
+          <div class="media-player">
+            <div
+              class="video-preview"
+              data-video="{{ recommendation.get('lien', '') }}"
+            >
+              <div class="play-overlay">
+                <button class="play-btn">▶️ Lancer la vidéo</button>
+              </div>
+            </div>
+            <div class="video-container hidden">
+              <iframe
+                src="about:blank"
+                allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              >
+              </iframe>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% elif recommendation.get('type') == "gratitude" %}
+        <div class="recommendation-card gratitude">
+          <h3>{{ recommendation.get('titre', '') }}</h3>
+          <p>{{ recommendation.get('message', '') }}</p>
+          <div class="gratitude-journal">
+            <div class="journal-entries">
+              <textarea
+                class="gratitude-entry"
+                placeholder="Notez ici quelque chose de positif..."
+              ></textarea>
+            </div>
+            <button class="save-entry-btn">💝 Sauvegarder</button>
+            <div class="saved-entries">
+              <h4>Vos moments de gratitude :</h4>
+              <ul class="entries-list"></ul>
+            </div>
+          </div>
+          {% if recommendation.get('instructions') %}
+          <div class="instructions-container">
+            <button class="toggle-instructions-btn">
+              📖 Voir les conseils
+            </button>
+            <ul class="instructions-list hidden">
+              {% for instruction in recommendation.get('instructions') %}
+              <li>{{ instruction }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+        {% elif recommendation.get('type') == "productivite" %}
+        <div class="recommendation-card productivity">
+          <h3>{{ recommendation.get('titre', '') }}</h3>
+          <p>{{ recommendation.get('message', '') }}</p>
+          {% if recommendation.get('instructions') %}
+          <ul class="instructions-list">
+            {% for instruction in recommendation.get('instructions') %}
+            <li>{{ instruction }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <div class="pomodoro-timer">
+            <div class="timer-display">25:00</div>
+            <div class="timer-controls">
+              <button class="start-timer-btn">▶️ Démarrer</button>
+              <button class="pause-timer-btn" disabled>⏸️ Pause</button>
+              <button class="reset-timer-btn">🔄 Réinitialiser</button>
+            </div>
+            <div class="timer-progress">
+              <div class="progress-bar"></div>
+            </div>
+          </div>
+        </div>
+        {% endif %} {% else %}
+        <div class="recommendation-card simple">
+          <div class="tip-content">
+            <div class="tip-icon">💡</div>
+            <p>{{ recommendation }}</p>
+          </div>
+        </div>
+        {% endif %} {% endfor %} {% endif %}
+      </div>
+    </div>
+
+    <!-- Conteneur pour les propositions d'agenda -->
+    <div id="agenda-container" class="agenda-container" style="display: none">
+      <!-- Les propositions seront insérées ici -->
+    </div>
+
+    <div id="status">Initialisation...</div>
+
+    <!-- Scripts modulaires -->
+
+    <!-- 1. Configuration -->
+    <script src="/static/js/config.js"></script>
+
+    <!-- 2. Modules utilitaires -->
+    <script src="/static/js/session.js"></script>
+
+    <!-- 3. Gestionnaires UI -->
+    <script src="/static/js/ui.js"></script>
+
+    <!-- 4. API Communication -->
+    <script src="/static/js/api.js"></script>
+
+    <!-- 5. Speech Recognition -->
+    <script src="/static/js/speech.js"></script>
+
+    <!-- 6. Booking Manager -->
+    <script src="/static/js/booking.js"></script>
+
+    <!-- 7. Agenda Manager -->
+    <script src="/static/js/agenda.js"></script>
+
+    <!-- 9. Gestionnaire des recommandations -->
+    <script src="/static/js/recommendations.js"></script>
+
+    <!-- 10. Orchestrateur principal (DERNIER) -->
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>

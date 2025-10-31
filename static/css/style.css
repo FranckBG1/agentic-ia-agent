@@ -1,0 +1,1002 @@
+/* --- Layout principal --- */
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* --- Banner d'urgence fixe en haut (VERSION COMPACTE) --- */
+.emergency-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.emergency-banner .emergency-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.emergency-banner .emergency-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 8px;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.emergency-banner .emergency-icon {
+  font-size: 1.2em;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.emergency-banner .emergency-transmission {
+  background: rgba(255, 235, 59, 0.3);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  border: 1px solid rgba(255, 235, 59, 0.5);
+}
+
+.emergency-banner .emergency-contacts-compact {
+  text-align: center;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.emergency-banner .emergency-contacts-compact strong {
+  color: #ffeb3b;
+  font-weight: bold;
+}
+
+.emergency-banner .close-emergency {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.emergency-banner .close-emergency:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* --- En-tête session --- */
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.session-info {
+  font-size: 0.85em;
+  color: #666;
+}
+
+#session-id {
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  color: #28a745;
+  background: #e8f5e9;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+#reset-button {
+  padding: 5px 12px;
+  background: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background 0.2s;
+}
+
+#reset-button:hover {
+  background: #e64a19;
+}
+
+/* Bouton Terminer la conversation (mode urgence) */
+#end-conversation-button {
+  padding: 5px 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background 0.2s;
+  margin-left: 8px;
+}
+
+#end-conversation-button:hover {
+  background: #5568d3;
+}
+
+/* --- Fenêtre de chat --- */
+#chat-window {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Messages --- */
+.message {
+  margin-bottom: 12px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+  animation: fadeIn 0.3s;
+}
+
+/* Message d'urgence dans le chat */
+.message.emergency {
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%) !important;
+  border: 4px solid #ff0000 !important;
+  color: white !important;
+  max-width: 95% !important;
+  padding: 20px !important;
+  margin: 20px auto !important;
+  box-shadow: 0 8px 30px rgba(255, 0, 0, 0.4) !important;
+  animation: urgencyPulse 2s infinite, fadeIn 0.3s;
+}
+
+.message.emergency .emergency-header {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.message.emergency .emergency-icon {
+  font-size: 32px;
+  margin: 0 10px;
+  animation: shake 0.5s infinite;
+}
+
+.message.emergency .emergency-body {
+  background: white;
+  color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.message.emergency .emergency-body h4 {
+  color: #ff4444;
+  margin: 15px 0 10px 0;
+  font-size: 18px;
+}
+
+.message.emergency .emergency-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.message.emergency .emergency-body li {
+  padding: 12px;
+  margin: 8px 0;
+  background: #f8f9fa;
+  border-left: 4px solid #ff4444;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.message.emergency .emergency-body strong {
+  color: #ff4444;
+  font-size: 18px;
+}
+
+.message.emergency .emergency-footer {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.message.emergency .emergency-contacts {
+  margin: 15px 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user {
+  text-align: right;
+  background: #dcf8c6;
+  margin-left: auto;
+  border-bottom-right-radius: 2px;
+}
+
+.bot {
+  text-align: left;
+  background: #e0e0e0;
+  margin-right: auto;
+  border-bottom-left-radius: 2px;
+}
+
+.system {
+  text-align: center;
+  background: #fff3cd;
+  color: #856404;
+  font-style: italic;
+  font-size: 0.9em;
+  margin: 15px auto;
+  max-width: 90%;
+  border: 1px solid #ffeaa7;
+}
+
+/* --- Indicateur de saisie --- */
+.typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 15px;
+  background: #e0e0e0;
+  border-radius: 8px;
+  max-width: 80px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  background: #888;
+  border-radius: 50%;
+  animation: typing-bounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-8px);
+  }
+}
+
+/* --- Contrôles d'entrée --- */
+#input-container {
+  display: flex;
+  gap: 8px;
+}
+
+#text-input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#text-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+#send-button,
+#mic-button {
+  padding: 12px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+#send-button {
+  background-color: #007bff;
+}
+
+#send-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+#mic-button {
+  background-color: #28a745;
+}
+
+#mic-button:hover:not(:disabled) {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.recording {
+  background-color: #dc3545 !important;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- Barre de statut --- */
+#status {
+  margin-top: 12px;
+  padding: 8px;
+  color: #666;
+  font-size: 0.85em;
+  text-align: center;
+  background: white;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.status-success {
+  color: #28a745;
+}
+.status-error {
+  color: #dc3545;
+}
+.status-warning {
+  color: #ff9800;
+}
+
+/* --- Scrollbar personnalisée --- */
+#chat-window::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chat-window::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+#chat-window::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+#chat-window::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  body {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  #chat-window {
+    height: 300px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  #send-button,
+  #mic-button {
+    padding: 10px 15px;
+    font-size: 0.9em;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🚨 MODE URGENCE - AFFICHAGE OPTIMISÉ
+   ═══════════════════════════════════════════════════════════ */
+
+/* Message d'urgence principal */
+.emergency-message {
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%) !important;
+  border: 4px solid #ff0000 !important;
+  border-radius: 20px !important;
+  padding: 25px !important;
+  margin: 20px 0 !important;
+  box-shadow: 0 8px 30px rgba(255, 0, 0, 0.4) !important;
+  animation: urgencyPulse 2s infinite;
+  max-width: 600px !important;
+  width: 100% !important;
+}
+
+@keyframes urgencyPulse {
+  0%,
+  100% {
+    box-shadow: 0 8px 30px rgba(255, 0, 0, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 40px rgba(255, 0, 0, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+.emergency-header {
+  text-align: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.emergency-header strong {
+  color: white;
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 10px 0;
+}
+
+.emergency-icon {
+  font-size: 40px;
+  display: inline-block;
+  animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+.emergency-content {
+  background: white;
+  color: #333;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 15px 0;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.emergency-content strong {
+  color: #ff4444;
+  font-size: 18px;
+}
+
+.emergency-footer {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   📞 CARTE CONTACTS D'URGENCE - OPTIMISÉE
+   ═══════════════════════════════════════════════════════════ */
+
+.emergency-contacts-card {
+  background: linear-gradient(to bottom, #ffffff, #fff5f5);
+  border: 3px solid #ff4444;
+  border-radius: 20px;
+  padding: 25px;
+  margin: 20px 0;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  max-width: 650px !important;
+  width: 100% !important;
+}
+
+.emergency-contacts-card h3 {
+  color: #ff4444;
+  font-size: 24px;
+  text-align: center;
+  margin: 0 0 15px 0;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #ff4444;
+  font-weight: 800;
+}
+
+.emergency-contacts-card > p {
+  text-align: center;
+  font-weight: bold;
+  color: #ff4444;
+  background: #fff5f5;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0 25px 0;
+  font-size: 15px;
+  border: 2px dashed #ff4444;
+}
+
+/* Contact individuel */
+.contact-item {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-left: 5px solid #6c757d;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.contact-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.contact-item.priority {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+  border-left: 5px solid #ff4444;
+  border: 3px solid #ff4444;
+  box-shadow: 0 4px 20px rgba(255, 68, 68, 0.2);
+}
+
+.contact-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-item.priority .contact-name {
+  color: #ff4444;
+  font-size: 22px;
+}
+
+.contact-phone {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 22px;
+  margin: 12px 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+  text-align: center;
+  display: block;
+  letter-spacing: 1px;
+}
+
+.contact-phone:hover {
+  background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+  transform: scale(1.05);
+  box-shadow: 0 6px 25px rgba(255, 68, 68, 0.5);
+}
+
+.contact-available {
+  color: #28a745;
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-description {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #6c757d;
+}
+
+/* Note importante en bas */
+.emergency-note {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 3px solid #ff9800;
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 25px;
+  text-align: center;
+  color: #333;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+}
+
+.emergency-note strong {
+  color: #ff4444;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🔴 BANDEAU PERSISTANT EN HAUT (Mode accompagnement)
+   ═══════════════════════════════════════════════════════════ */
+
+.emergency-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 10000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.emergency-banner-button {
+  background: white;
+  color: #ff4444;
+  padding: 10px 25px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 900;
+  transition: all 0.3s;
+}
+
+.emergency-banner-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Adaptation du body quand bandeau actif */
+body.emergency-mode {
+  padding-top: 80px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   � BANDEAU SERVICE D'AIDE (Transmission au 114)
+   ═══════════════════════════════════════════════════════════ */
+
+.help-service-banner {
+  position: fixed;
+  top: 70px; /* Positionné sous le bandeau d'urgence rouge */
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Bandeau de confirmation d'envoi */
+.help-service-banner.sent {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  animation: fadeInConfirmation 0.5s ease-in-out;
+}
+
+@keyframes fadeInConfirmation {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.help-service-banner span:first-child {
+  font-size: 20px;
+  animation: pulse-icon 2s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Ajuster le padding du body quand les deux bandeaux sont présents */
+body.emergency-mode:has(#help-service-banner) {
+  padding-top: 140px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   �📱 RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .emergency-message,
+  .emergency-contacts-card {
+    margin: 15px 10px;
+    padding: 20px;
+  }
+
+  .emergency-header strong {
+    font-size: 22px;
+  }
+
+  .contact-phone {
+    font-size: 18px;
+    padding: 12px 20px;
+  }
+
+  .emergency-banner {
+    flex-direction: column;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .help-service-banner {
+    top: 100px; /* Ajusté pour mobile */
+    flex-direction: column;
+    padding: 10px;
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  body.emergency-mode:has(#help-service-banner) {
+    padding-top: 180px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   💬 TYPING INDICATOR (Animation "...")
+   ═══════════════════════════════════════════════════════════ */
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  background: #999;
+  border-radius: 50%;
+  animation: typing-bounce 1.4s infinite;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🗓️ AGENDA RECOMMENDATION CARD
+   ═══════════════════════════════════════════════════════════ */
+
+.recommendation-card.agenda {
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border-left: 4px solid #ff9800;
+}
+
+.agenda-message {
+  margin: 10px 0 15px;
+  color: #666;
+  font-size: 0.95em;
+}
+
+.agenda-events-list {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.agenda-event-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  border-left: 3px solid #ff9800;
+}
+
+.agenda-event-item:hover {
+  background: #eeeeee;
+}
+
+.event-checkbox {
+  margin-right: 12px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.event-details strong {
+  color: #333;
+  font-size: 1em;
+}
+
+.event-time {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.event-reason {
+  color: #ff9800;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.agenda-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-confirm-agenda,
+.btn-cancel-agenda {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-confirm-agenda {
+  background: #4caf50;
+  color: white;
+}
+
+.btn-confirm-agenda:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+.btn-cancel-agenda {
+  background: #f44336;
+  color: white;
+}
+
+.btn-cancel-agenda:hover {
+  background: #da190b;
+  transform: translateY(-2px);
+}
+
+.agenda-result {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.info-message {
+  margin: 0;
+  font-size: 0.95em;
+}
