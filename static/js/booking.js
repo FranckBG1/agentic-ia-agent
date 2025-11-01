@@ -34,7 +34,7 @@ class BookingManager {
     });
 
     this.container.appendChild(card);
-    this.container.style.display = "block";
+    this.container.style.display = "none";
 
     console.log(" [BOOKING] Créneaux affichés avec succès");
   }
