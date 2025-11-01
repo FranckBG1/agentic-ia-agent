@@ -1,6 +1,6 @@
 /**
  * ========================================
- * GESTION DE SESSION PERSISTANTE
+ * GESTION DE SESSION PERSISTANTE (compatible WebView)
  * ========================================
  */
 
@@ -39,16 +39,21 @@ const SessionManager = {
 
   /**
    * Réinitialise la session (nouvelle conversation)
+   * — Version mobile-friendly : pas de popup confirm()
    */
   reset() {
-    if (confirm(CONFIG.MESSAGES.RESET_CONFIRM)) {
+    try {
+      // Supprimer directement la session
       localStorage.removeItem(CONFIG.SESSION_STORAGE_KEY);
 
       if (CONFIG.DEBUG) {
-        console.log("🧹 Session réinitialisée");
+        console.log("🧹 Session réinitialisée (sans confirmation)");
       }
 
+      // Recharge la page immédiatement
       window.location.reload();
+    } catch (err) {
+      console.error("❌ Erreur lors du reset de session :", err);
     }
   },
 
