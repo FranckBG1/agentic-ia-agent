@@ -1,6 +1,6 @@
 /**
  * ========================================
- * WEB SPEECH API - RECONNAISSANCE VOCALE
+ * WEB SPEECH API - RECONNAISSANCE VOCALE (SAFE WEBVIEW)
  * ========================================
  */
 
@@ -8,16 +8,30 @@ const SpeechManager = {
   recognition: null,
   isRecording: false,
   onTranscriptCallback: null,
+  micBlocked: false,
 
-  /**
-   * Initialise la reconnaissance vocale
-   */
   init(onTranscript) {
-    // Dépendances
     if (typeof UI === "undefined" || typeof CONFIG === "undefined") {
-      console.error(
-        "❌ UI ou CONFIG non chargé. Assurez-vous que ui.js et config.js sont inclus avant speech.js."
+      console.error("❌ UI ou CONFIG non chargé.");
+      return false;
+    }
+
+    // Détection WebView (iOS / Android)
+    const userAgent = navigator.userAgent || "";
+    const isWebView =
+      /\bwv\b/.test(userAgent) || // Android WebView
+      /WebView/.test(userAgent) || // iOS WebView
+      /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(userAgent);
+
+    if (isWebView) {
+      console.warn(
+        "⚠️ WebView détectée : désactivation de la reconnaissance vocale."
       );
+      UI.updateStatus(
+        "Micro désactivé (utilisez la version mobile native)",
+        "error"
+      );
+      UI.micButton.disabled = true;
       return false;
     }
 
@@ -35,7 +49,6 @@ const SpeechManager = {
     }
 
     this.onTranscriptCallback = onTranscript;
-
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
@@ -50,21 +63,12 @@ const SpeechManager = {
     this.recognition.onerror = (event) => this._onError(event);
     this.recognition.onend = () => this._onEnd();
 
-    if (CONFIG.DEBUG) {
-      console.log("✅ Web Speech API initialisée");
-    }
-
+    if (CONFIG.DEBUG) console.log("✅ Web Speech API initialisée");
     return true;
   },
 
-  /**
-   * Démarre/arrête l'enregistrement
-   */
   toggle() {
-    if (!this.recognition) {
-      console.error("❌ Speech recognition non initialisée");
-      return;
-    }
+    if (!this.recognition || this.micBlocked) return;
 
     if (this.isRecording) {
       this.stop();
@@ -73,63 +77,49 @@ const SpeechManager = {
     }
   },
 
-  /**
-   * Démarre l'enregistrement
-   */
   start() {
+    if (this.micBlocked) return;
     try {
       this.recognition.start();
     } catch (e) {
-      console.warn("⚠️ Reconnaissance déjà en cours");
+      console.warn("⚠️ Reconnaissance déjà en cours ou bloquée", e);
     }
   },
 
-  /**
-   * Arrête l'enregistrement
-   */
   stop() {
-    this.recognition.stop();
+    if (this.recognition) this.recognition.stop();
   },
-
-  // --- Événements internes ---
 
   _onStart() {
-    if (CONFIG.DEBUG) {
-      console.log("🎤 Enregistrement démarré");
-    }
-
     this.isRecording = true;
     UI.micButton.classList.add("recording");
-    UI.micButton.textContent = "🔴 Arrété...";
+    UI.micButton.textContent = "🔴 Arrêté...";
     UI.updateStatus("🎤 Parlez maintenant...", "warning");
   },
 
   _onResult(event) {
     const transcript = event.results[0][0].transcript;
-    const confidence = event.results[0][0].confidence;
-
-    // Callback vers main.js
-    if (this.onTranscriptCallback) {
-      this.onTranscriptCallback(transcript);
-    }
+    if (this.onTranscriptCallback) this.onTranscriptCallback(transcript);
   },
 
   _onError(event) {
     console.error("❌ Erreur Speech API:", event.error);
-
     let errorMsg = "Erreur vocale";
+
     switch (event.error) {
       case "no-speech":
-        errorMsg = "Aucune parole détectée. Réessayez.";
+        errorMsg = "Aucune parole détectée.";
         break;
       case "audio-capture":
-        errorMsg = "Microphone inaccessible";
+        errorMsg = "Microphone inaccessible.";
+        this.micBlocked = true;
         break;
       case "not-allowed":
-        errorMsg = "Permission microphone refusée";
+        errorMsg = "Permission micro refusée.";
+        this.micBlocked = true;
         break;
       case "network":
-        errorMsg = "Erreur réseau";
+        errorMsg = "Erreur réseau.";
         break;
     }
 
@@ -138,9 +128,7 @@ const SpeechManager = {
   },
 
   _onEnd() {
-    if (CONFIG.DEBUG) {
-      console.log("⏹️ Enregistrement terminé");
-    }
+    if (CONFIG.DEBUG) console.log("⏹️ Enregistrement terminé");
     this._resetUI();
   },
 
@@ -151,7 +139,6 @@ const SpeechManager = {
   },
 };
 
-// Export global
 if (typeof window !== "undefined") {
   window.SpeechManager = SpeechManager;
 }
