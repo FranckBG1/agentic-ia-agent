@@ -133,7 +133,7 @@ Réponds UNIQUEMENT avec le JSON, sans texte avant ou après."""
             response = self.model.generate_content(
                 prompt,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.1,  # Précision maximale
+                    temperature=0.3,  # Précision maximale
                     max_output_tokens=200
                 )
             )
