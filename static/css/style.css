@@ -140,7 +140,7 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  width: 100%;
+  width: 94%;
   z-index: 9999;
   background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
   color: white;
@@ -161,7 +161,7 @@ h1 {
 }
 
 .emergency-banner .emergency-content {
-  max-width: 1200px;
+  max-width: 90%;
   margin: 0 auto;
   position: relative;
 }
@@ -1119,4 +1119,15 @@ body.emergency-mode:has(#help-service-banner) {
 .info-message {
   margin: 0;
   font-size: 0.95em;
+}
+
+/* 📱 Ajustement spécifique pour mobile - hauteur du bandeau */
+@media (max-width: 768px) {
+  #emergency-banner,
+  .emergency-banner {
+    max-height: 15vh; /* Limite à 15% de la hauteur de l’écran */
+    overflow-y: auto; /* Si le contenu dépasse, on scrolle à l’intérieur */
+    padding: 8px 12px; /* Réduit légèrement les marges internes */
+    font-size: 14px; /* Texte un peu plus petit pour mobile */
+  }
 }
