@@ -1125,9 +1125,10 @@ body.emergency-mode:has(#help-service-banner) {
 @media (max-width: 768px) {
   #emergency-banner,
   .emergency-banner {
-    max-height: 15vh; /* Limite à 15% de la hauteur de l’écran */
+    max-height: 25vh; /* Limite à 15% de la hauteur de l’écran */
     overflow-y: auto; /* Si le contenu dépasse, on scrolle à l’intérieur */
     padding: 8px 12px; /* Réduit légèrement les marges internes */
     font-size: 14px; /* Texte un peu plus petit pour mobile */
   }
 }
+
